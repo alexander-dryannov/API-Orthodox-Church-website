@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/database,python,pycharm,pycharm+all,pycharm+iml,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=database,python,pycharm,pycharm+all,pycharm+iml,visualstudiocode
 
+### Project  ###
+.prod.env
+
 ### Database ###
 *.accdb
 *.db
