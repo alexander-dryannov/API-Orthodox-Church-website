@@ -4,6 +4,8 @@
 ### Project  ###
 .prod.env
 gallery_*/
+.idea/
+media/
 
 ### Database ###
 *.accdb

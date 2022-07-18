@@ -13,9 +13,6 @@ if DEBUG:
 else:
     load_dotenv(find_dotenv('.prod.env'))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -136,6 +133,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MEDIA_URL = 'media/'
+
+MEDIA_ROOT = 'media'
 
 CONVERTING_SAVED_IMAGE = 'webp'
 

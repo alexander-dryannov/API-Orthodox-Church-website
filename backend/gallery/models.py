@@ -1,4 +1,3 @@
-from distutils.command.upload import upload
 import uuid
 from pathlib import Path
 from django.db import models
@@ -32,7 +31,7 @@ class GalleryAlbum(models.Model):
 
 
 class GalleryAlbumImage(models.Model):
-    album = models.ForeignKey(GalleryAlbum, on_delete=models.CASCADE)
+    album = models.ForeignKey(GalleryAlbum, on_delete=models.CASCADE, related_name='album')
     image = models.ImageField(upload_to='gallery_album_images', height_field='height', width_field='width')
     height = models.PositiveIntegerField(blank=True, default=0)
     width = models.PositiveIntegerField(blank=True, default=0)
