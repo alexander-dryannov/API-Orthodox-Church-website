@@ -3,6 +3,7 @@
 
 ### Project  ###
 .prod.env
+gallery_*/
 
 ### Database ###
 *.accdb
