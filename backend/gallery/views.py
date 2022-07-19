@@ -1,4 +1,4 @@
-from rest_framework import status
+from email.mime import image
 from .handlers import convert_image
 from django.http import JsonResponse
 from .models import GalleryAlbum, GalleryAlbumImage
@@ -16,13 +16,13 @@ class LCGalleryAlbumView(ListCreateAPIView):
             cover, _, _ = convert_image(request.data['cover'])
             request.data['cover'] = cover
             self.create(request, *args, **kwargs)
-            print(self.queryset.last())
             for image in images:
                 image, height, width = convert_image(image, field_name=image)
                 GalleryAlbumImage.objects.create(album=self.queryset.last(), image=image, width=width, height=height)
+            return JsonResponse({'message': 'Альбом создан.'}, json_dumps_params={'ensure_ascii': False})
         else:
             super().create(request, *args, **kwargs)
-            return JsonResponse({'status_code': status.HTTP_201_CREATED, 'message': 'Создан пустой альбом.'}, json_dumps_params={'ensure_ascii': False})
+            return JsonResponse({'message': 'Создан пустой альбом.'}, json_dumps_params={'ensure_ascii': False})
 
 
 class RUDGalleryAlbumView(RetrieveUpdateDestroyAPIView):
@@ -33,11 +33,19 @@ class RUDGalleryAlbumView(RetrieveUpdateDestroyAPIView):
         if request.data.get('images'):
             images = request.data.pop('images')
             for image in images:
-                image, height, width = convert_image(image, field_name=image)
+                image, height, width = convert_image(image, field_name='image')
                 GalleryAlbumImage.objects.create(album=self.queryset.last(), image=image, width=width, height=height)
         return super().patch(request, *args, **kwargs)
 
 
-class DGalleryAlbumImage(DestroyAPIView):
+class RUDGalleryAlbumImage(RetrieveUpdateDestroyAPIView):
     queryset = GalleryAlbumImage.objects.all()
     serializer_class = GalleryAlbumImageSerializer
+    
+    def patch(self, request, *args, **kwargs):
+        if request.data.get('image'):
+            image, height, width = convert_image(request.data.get('image'), field_name='image')
+            request.data['image'] = image
+            request.data['width'] = width
+            request.data['height'] = height
+        return super().patch(request, *args, **kwargs)
