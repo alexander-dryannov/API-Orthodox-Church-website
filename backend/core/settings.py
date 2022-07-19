@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'gallery',
     'schedule',
+    'clergy',
 ]
 
 MIDDLEWARE = [

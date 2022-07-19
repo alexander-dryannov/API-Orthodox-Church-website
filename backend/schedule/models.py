@@ -1,12 +1,11 @@
 from uuid import uuid4
 from django.db import models
-from django.urls import reverse
 
 
 class Schedule(models.Model):
     title = models.CharField(max_length=99)
     data = models.JSONField()
-    slug = models.SlugField(max_length=42, blank=True)
+    slug = models.SlugField(max_length=42, blank=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_visible = models.BooleanField(default=True)
