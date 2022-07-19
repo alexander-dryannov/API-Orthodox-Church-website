@@ -6,26 +6,12 @@ from .models import GalleryAlbumImage, GalleryAlbum
 class GalleryAlbumImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GalleryAlbumImage
-        fields = ['album', 'id', 'image', 'width', 'height', 'visible', 'created_at', 'updated_at']
-
-
-class GalleryAlbumNestedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GalleryAlbumImage
-        fields = ['id', 'image', 'width', 'height', 'visible', 'created_at', 'updated_at']
-        
-
-class GalleryAlbumCreateSerializer(serializers.ModelSerializer):
-    images = serializers.ListField(child=serializers.ImageField())
-    
-    class Meta:
-        model = GalleryAlbum
-        fields = ['id', 'title', 'cover', 'visible', 'images']
+        fields = ['id', 'image', 'width', 'height', 'is_visible', 'created_at', 'updated_at']
 
 
 class GalleryAlbumSerializer(serializers.ModelSerializer):
-    images = GalleryAlbumNestedSerializer(source='album', many=True)
+    images = GalleryAlbumImageSerializer(source='album', many=True, required=False, allow_null=False)
     class Meta:
         model = GalleryAlbum
-        fields = ['id', 'title', 'cover', 'slug', 'visible', 'created_at', 'updated_at', 'images']
+        fields = ['id', 'title', 'cover', 'slug', 'is_visible', 'created_at', 'updated_at', 'images']
         depth = 1

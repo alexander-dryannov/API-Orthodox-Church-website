@@ -12,7 +12,7 @@ class GalleryAlbum(models.Model):
     slug = models.SlugField(unique=True, max_length=42, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    visible = models.BooleanField(default=True)
+    is_visible = models.BooleanField(default=True)
     
     def get_absolute_url(self):
         return reverse('album_details', args=[self.slug])
@@ -38,7 +38,7 @@ class GalleryAlbumImage(models.Model):
     slug = models.SlugField(unique=True, max_length=42, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    visible = models.BooleanField(default=True)
+    is_visible = models.BooleanField(default=True)
     
     def save(self, *args, **kwargs):
         if not self.id:

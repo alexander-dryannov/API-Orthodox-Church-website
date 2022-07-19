@@ -6,7 +6,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('gallery/', include('gallery.urls')),
+    path('api/gallery/', include('gallery.urls')),
+    path('api/schedule/', include('schedule.urls')),
 ]
 
 if settings.DEBUG:
