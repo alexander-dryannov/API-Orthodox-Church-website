@@ -1,12 +1,14 @@
 from .models import Donation
 from rest_framework import generics
 from .handlers import get_donation_data
+from .permissions import IsStaffOrReadOnly
 from .serializers import DonationSerializer
 
 
 class LCDonationView(generics.ListCreateAPIView):
     queryset = Donation.objects.all()
     serializer_class = DonationSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def post(self, request, *args, **kwargs):
         if request.data.get('file'):
@@ -22,6 +24,7 @@ class LCDonationView(generics.ListCreateAPIView):
 class RUDDonationView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Donation.objects.all()
     serializer_class = DonationSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):

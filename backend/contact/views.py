@@ -1,12 +1,14 @@
 from .models import Contact
 from rest_framework import generics
 from .handlers import get_donation_data
+from .permissions import IsStaffOrReadOnly
 from .serializers import ContactSerializer
 
 
 class LCContactView(generics.ListCreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def post(self, request, *args, **kwargs):
         if request.data.get('file'):
@@ -22,6 +24,7 @@ class LCContactView(generics.ListCreateAPIView):
 class RUDContactView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):

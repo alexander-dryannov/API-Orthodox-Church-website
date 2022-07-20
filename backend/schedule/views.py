@@ -1,6 +1,7 @@
 from .models import Schedule
 from .handlers import get_data
 from django.http import JsonResponse
+from .permissions import IsStaffOrReadOnly
 from rest_framework import status, generics
 from .serializers import ScheduleSerializer
 
@@ -8,6 +9,7 @@ from .serializers import ScheduleSerializer
 class LCScheduleView(generics.ListCreateAPIView):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -37,6 +39,7 @@ class LCScheduleView(generics.ListCreateAPIView):
 class RUDScheduleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):
@@ -44,7 +47,5 @@ class RUDScheduleView(generics.RetrieveUpdateDestroyAPIView):
             data = get_data(document[0])
             request.data['data'] = data
             super().partial_update(request, *args, **kwargs)
-            return JsonResponse({'status_code': status.HTTP_204_NO_CONTENT})
         else:
             super().partial_update(request, *args, **kwargs)
-            return JsonResponse({'status_code': status.HTTP_204_NO_CONTENT})

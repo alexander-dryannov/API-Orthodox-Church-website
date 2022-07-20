@@ -2,11 +2,13 @@ from .models import Post
 from .handlers import convert_image
 from rest_framework import generics
 from .serializers import PostSerializer
+from .permissions import IsStaffOrReadOnly
 
 
 class LCPostView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def post(self, request, *args, **kwargs):
         request.data['cover'] = convert_image(
@@ -17,6 +19,7 @@ class LCPostView(generics.ListCreateAPIView):
 class RUDPostView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('cover'):

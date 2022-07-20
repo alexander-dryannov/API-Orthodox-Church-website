@@ -1,13 +1,15 @@
 from .models import Cleric
 from django.http import JsonResponse
 from .handlers import get_cleric_data
-from rest_framework import status, generics
 from .serializers import ClericSerializer
+from .permissions import IsStaffOrReadOnly
+from rest_framework import status, generics
 
 
 class LCClericView(generics.ListCreateAPIView):
     queryset = Cleric.objects.all()
     serializer_class = ClericSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def post(self, request, *args, **kwargs):
         try:
@@ -25,7 +27,6 @@ class LCClericView(generics.ListCreateAPIView):
             if photo is not None:
                 request.data['photo'] = photo
             super().create(request, *args, **kwargs)
-            return JsonResponse({'status_code': status.HTTP_201_CREATED})
         else:
             return JsonResponse(
                 {
@@ -39,6 +40,7 @@ class LCClericView(generics.ListCreateAPIView):
 class RUDClericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cleric.objects.all()
     serializer_class = ClericSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):
@@ -47,7 +49,5 @@ class RUDClericView(generics.RetrieveUpdateDestroyAPIView):
             request.data['photo'] = photo
             request.data['data'] = data
             super().partial_update(request, *args, **kwargs)
-            return JsonResponse({'status_code': status.HTTP_204_NO_CONTENT})
         else:
             super().partial_update(request, *args, **kwargs)
-            return JsonResponse({'status_code': status.HTTP_204_NO_CONTENT})

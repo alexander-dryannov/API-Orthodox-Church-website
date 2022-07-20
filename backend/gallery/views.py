@@ -1,6 +1,7 @@
 from .handlers import convert_image
 from rest_framework import generics
 from django.http import JsonResponse
+from .permissions import IsStaffOrReadOnly
 from .models import GalleryAlbum, GalleryAlbumImage
 from .serializers import GalleryAlbumSerializer, GalleryAlbumImageSerializer
 
@@ -8,6 +9,7 @@ from .serializers import GalleryAlbumSerializer, GalleryAlbumImageSerializer
 class LCGalleryAlbumView(generics.ListCreateAPIView):
     queryset = GalleryAlbum.objects.all()
     serializer_class = GalleryAlbumSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def post(self, request, *args, **kwargs):
         if request.data.get('images'):
@@ -32,6 +34,7 @@ class LCGalleryAlbumView(generics.ListCreateAPIView):
 class RUDGalleryAlbumView(generics.RetrieveUpdateDestroyAPIView):
     queryset = GalleryAlbum.objects.all()
     serializer_class = GalleryAlbumSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('images'):
@@ -49,6 +52,7 @@ class RUDGalleryAlbumView(generics.RetrieveUpdateDestroyAPIView):
 class RUDGalleryAlbumImage(generics.RetrieveUpdateDestroyAPIView):
     queryset = GalleryAlbumImage.objects.all()
     serializer_class = GalleryAlbumImageSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('image'):
