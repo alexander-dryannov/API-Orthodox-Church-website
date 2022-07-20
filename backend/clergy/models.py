@@ -10,6 +10,8 @@ class Cleric(models.Model):
     slug = models.SlugField(max_length=42, blank=True, unique=True)
     data = models.JSONField()
     photo = models.ImageField(upload_to='cleric_photo', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     is_visible = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):

@@ -8,7 +8,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/gallery/', include('gallery.urls')),
     path('api/schedule/', include('schedule.urls')),
-    path('api/clergy/', include('clergy.urls'))
+    path('api/clergy/', include('clergy.urls')),
+    path('api/donation/', include('donation.urls'))
 ]
 
 if settings.DEBUG:

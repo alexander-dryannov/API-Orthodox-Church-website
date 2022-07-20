@@ -14,9 +14,6 @@ class GalleryAlbum(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_visible = models.BooleanField(default=True)
     
-    def get_absolute_url(self):
-        return reverse('album_details', args=[self.slug])
-    
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = uuid.uuid4().hex

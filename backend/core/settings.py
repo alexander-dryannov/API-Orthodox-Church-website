@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'gallery',
     'schedule',
     'clergy',
+    'donation',
 ]
 
 MIDDLEWARE = [
