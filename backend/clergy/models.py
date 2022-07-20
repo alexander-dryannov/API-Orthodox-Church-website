@@ -9,7 +9,7 @@ class Cleric(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=42, blank=True, unique=True)
     data = models.JSONField()
-    photo = models.ImageField(upload_to='cleric_photo')
+    photo = models.ImageField(upload_to='cleric_photo', blank=True)
     is_visible = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):

@@ -22,7 +22,8 @@ class LCClericView(generics.ListCreateAPIView):
         if request.data.get('name'):
             data, photo = get_cleric_data(document[0])
             request.data['data'] = data
-            request.data['photo'] = photo
+            if photo is not None:
+                request.data['photo'] = photo
             super().create(request, *args, **kwargs)
             return JsonResponse({'status_code': status.HTTP_201_CREATED})
         else:

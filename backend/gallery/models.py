@@ -26,8 +26,8 @@ class GalleryAlbum(models.Model):
         return self.title
     
     class Meta:
-        verbose_name = 'Album'
-        verbose_name_plural = 'Albums'
+        verbose_name = 'Альбом'
+        verbose_name_plural = 'Альбомы'
 
 
 class GalleryAlbumImage(models.Model):
@@ -49,8 +49,8 @@ class GalleryAlbumImage(models.Model):
         return self.slug
     
     class Meta:
-        verbose_name = 'Image'
-        verbose_name_plural = 'Images'
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'
 
 
 @receiver(post_delete, sender=GalleryAlbumImage)
