@@ -27,9 +27,6 @@ class LCGalleryAlbumView(generics.ListCreateAPIView):
                 json_dumps_params={'ensure_ascii': False})
         else:
             super().create(request, *args, **kwargs)
-            return JsonResponse(
-                {'message': 'Создан пустой альбом.'},
-                json_dumps_params={'ensure_ascii': False})
 
 
 class RUDGalleryAlbumView(generics.RetrieveUpdateDestroyAPIView):

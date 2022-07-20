@@ -9,7 +9,9 @@ urlpatterns = [
     path('api/gallery/', include('gallery.urls')),
     path('api/schedule/', include('schedule.urls')),
     path('api/clergy/', include('clergy.urls')),
-    path('api/donation/', include('donation.urls'))
+    path('api/donation/', include('donation.urls')),
+    path('api/contacts/', include('contact.urls'))
+
 ]
 
 if settings.DEBUG:

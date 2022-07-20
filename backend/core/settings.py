@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'schedule',
     'clergy',
     'donation',
+    'contact',
 ]
 
 MIDDLEWARE = [

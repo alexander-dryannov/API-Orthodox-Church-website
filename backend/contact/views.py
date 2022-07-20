@@ -1,12 +1,12 @@
-from .models import Donation
+from .models import Contact
 from rest_framework import generics
 from .handlers import get_donation_data
-from .serializers import DonationSerializer
+from .serializers import ContactSerializer
 
 
-class LCDonationView(generics.ListCreateAPIView):
-    queryset = Donation.objects.all()
-    serializer_class = DonationSerializer
+class LCContactView(generics.ListCreateAPIView):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
 
     def post(self, request, *args, **kwargs):
         if request.data.get('file'):
@@ -19,9 +19,9 @@ class LCDonationView(generics.ListCreateAPIView):
             return super().post(request, *args, **kwargs)
 
 
-class RUDDonationView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Donation.objects.all()
-    serializer_class = DonationSerializer
+class RUDContactView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):
