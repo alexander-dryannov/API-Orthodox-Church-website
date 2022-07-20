@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'clergy',
     'donation',
     'contact',
+    'blog'
 ]
 
 MIDDLEWARE = [

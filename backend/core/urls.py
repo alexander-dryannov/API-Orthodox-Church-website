@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
+from django.urls import path, include
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -10,8 +10,8 @@ urlpatterns = [
     path('api/schedule/', include('schedule.urls')),
     path('api/clergy/', include('clergy.urls')),
     path('api/donation/', include('donation.urls')),
-    path('api/contacts/', include('contact.urls'))
-
+    path('api/contacts/', include('contact.urls')),
+    path('api/news/', include('blog.urls'))
 ]
 
 if settings.DEBUG:
