@@ -10,6 +10,9 @@ class LCClericView(generics.ListCreateAPIView):
     queryset = Cleric.objects.all()
     serializer_class = ClericSerializer
     permission_classes = [IsStaffOrReadOnly]
+    
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         try:
