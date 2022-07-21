@@ -2,13 +2,13 @@ import os
 from .base import *
 from dotenv import load_dotenv, find_dotenv
 
+load_dotenv(find_dotenv('.dev.env'))
+
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-load_dotenv(find_dotenv('.dev.env'))
 
 DATABASES = {
     'default': {
