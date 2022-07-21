@@ -14,16 +14,19 @@ class LCGalleryAlbumView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if request.data.get('images'):
             images = request.data.pop('images')
-            cover, _, _ = convert_image(request.data['cover'])
+            cover, _, _, _, _ = convert_image(request.data['cover'])
             request.data['cover'] = cover
             self.create(request, *args, **kwargs)
             for item in images:
-                image, height, width = convert_image(item, field_name='image')
+                image, width, height, w, h = convert_image(item, field_name='image')
                 GalleryAlbumImage.objects.create(
                     album=self.queryset.last(),
                     image=image,
                     width=width,
-                    height=height)
+                    height=height,
+                    origin_width=w,
+                    origin_height=h
+                )
             return JsonResponse(
                 {'message': 'Альбом создан.'},
                 json_dumps_params={'ensure_ascii': False})
@@ -40,12 +43,15 @@ class RUDGalleryAlbumView(generics.RetrieveUpdateDestroyAPIView):
         if request.data.get('images'):
             images = request.data.pop('images')
             for item in images:
-                image, height, width = convert_image(item, field_name='image')
+                image, width, height, w, h = convert_image(item, field_name='image')
                 GalleryAlbumImage.objects.create(
                     album=self.queryset.last(),
                     image=image,
                     width=width,
-                    height=height)
+                    height=height,
+                    origin_width=w,
+                    origin_height=h
+                )
         return super().patch(request, *args, **kwargs)
 
 
@@ -56,10 +62,12 @@ class RUDGalleryAlbumImage(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request, *args, **kwargs):
         if request.data.get('image'):
-            image, height, width = convert_image(
+            image, width, height, w, h = convert_image(
                 request.data.get('image'),
                 field_name='image')
             request.data['image'] = image
             request.data['width'] = width
             request.data['height'] = height
+            request.data['origin_width'] = w
+            request.data['origin_height'] = h
         return super().patch(request, *args, **kwargs)

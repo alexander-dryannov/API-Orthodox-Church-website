@@ -29,7 +29,9 @@ class GalleryAlbum(models.Model):
 
 class GalleryAlbumImage(models.Model):
     album = models.ForeignKey(GalleryAlbum, on_delete=models.CASCADE, related_name='album')
-    image = models.ImageField(upload_to='gallery_album_images', height_field='height', width_field='width')
+    image = models.ImageField(upload_to='gallery_album_images')
+    origin_height = models.PositiveIntegerField(blank=True, default=0)
+    origin_width = models.PositiveIntegerField(blank=True, default=0)
     height = models.PositiveIntegerField(blank=True, default=0)
     width = models.PositiveIntegerField(blank=True, default=0)
     slug = models.SlugField(unique=True, max_length=42, blank=True)
