@@ -5,11 +5,13 @@ from .permissions import IsStaffOrReadOnly
 from .serializers import ContactSerializer
 
 
-class LCContactView(generics.ListCreateAPIView):
+class MixinContact:
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
     permission_classes = [IsStaffOrReadOnly]
 
+
+class LCContactView(MixinContact, generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if request.data.get('file'):
             document = request.data.pop('file')
@@ -21,11 +23,7 @@ class LCContactView(generics.ListCreateAPIView):
             return super().post(request, *args, **kwargs)
 
 
-class RUDContactView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Contact.objects.all()
-    serializer_class = ContactSerializer
-    permission_classes = [IsStaffOrReadOnly]
-
+class RUDContactView(MixinContact, generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):
             document = request.data.pop('file')

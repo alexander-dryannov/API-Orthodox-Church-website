@@ -6,17 +6,19 @@ from .models import GalleryAlbum, GalleryAlbumImage
 from .serializers import GalleryAlbumSerializer, GalleryAlbumImageSerializer
 
 
-class LCGalleryAlbumView(generics.ListCreateAPIView):
+class MixinGallery:
     queryset = GalleryAlbum.objects.all()
     serializer_class = GalleryAlbumSerializer
     permission_classes = [IsStaffOrReadOnly]
 
+
+class LCGalleryAlbumView(MixinGallery, generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if request.data.get('images'):
             images = request.data.pop('images')
             cover, _, _, _, _ = convert_image(request.data['cover'])
             request.data['cover'] = cover
-            self.create(request, *args, **kwargs)
+            album_obj = self.create(request, *args, **kwargs)
             for item in images:
                 image, width, height, w, h = convert_image(item, field_name='image')
                 GalleryAlbumImage.objects.create(
@@ -27,18 +29,12 @@ class LCGalleryAlbumView(generics.ListCreateAPIView):
                     origin_width=w,
                     origin_height=h
                 )
-            return JsonResponse(
-                {'message': 'Альбом создан.'},
-                json_dumps_params={'ensure_ascii': False})
+            return album_obj
         else:
             super().create(request, *args, **kwargs)
 
 
-class RUDGalleryAlbumView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = GalleryAlbum.objects.all()
-    serializer_class = GalleryAlbumSerializer
-    permission_classes = [IsStaffOrReadOnly]
-
+class RUDGalleryAlbumView(MixinGallery, generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         if request.data.get('images'):
             images = request.data.pop('images')

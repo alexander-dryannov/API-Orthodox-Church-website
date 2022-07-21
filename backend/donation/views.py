@@ -5,11 +5,13 @@ from .permissions import IsStaffOrReadOnly
 from .serializers import DonationSerializer
 
 
-class LCDonationView(generics.ListCreateAPIView):
+class MixinDonation:
     queryset = Donation.objects.all()
     serializer_class = DonationSerializer
     permission_classes = [IsStaffOrReadOnly]
 
+
+class LCDonationView(MixinDonation, generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if request.data.get('file'):
             document = request.data.pop('file')
@@ -21,11 +23,7 @@ class LCDonationView(generics.ListCreateAPIView):
             return super().post(request, *args, **kwargs)
 
 
-class RUDDonationView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Donation.objects.all()
-    serializer_class = DonationSerializer
-    permission_classes = [IsStaffOrReadOnly]
-
+class RUDDonationView(MixinDonation, generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):
             document = request.data.pop('file')

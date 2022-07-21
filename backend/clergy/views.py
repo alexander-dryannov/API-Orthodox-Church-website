@@ -6,11 +6,13 @@ from .permissions import IsStaffOrReadOnly
 from rest_framework import status, generics
 
 
-class LCClericView(generics.ListCreateAPIView):
+class MixinClergy:
     queryset = Cleric.objects.all()
     serializer_class = ClericSerializer
     permission_classes = [IsStaffOrReadOnly]
-    
+
+
+class LCClericView(MixinClergy, generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
@@ -29,7 +31,7 @@ class LCClericView(generics.ListCreateAPIView):
             request.data['data'] = data
             if photo is not None:
                 request.data['photo'] = photo
-            super().create(request, *args, **kwargs)
+            return super().create(request, *args, **kwargs)
         else:
             return JsonResponse(
                 {
@@ -40,17 +42,13 @@ class LCClericView(generics.ListCreateAPIView):
             )
 
 
-class RUDClericView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Cleric.objects.all()
-    serializer_class = ClericSerializer
-    permission_classes = [IsStaffOrReadOnly]
-
+class RUDClericView(MixinClergy, generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):
             document = request.data.pop('file')
             data, photo = get_cleric_data(document[0])
             request.data['photo'] = photo
             request.data['data'] = data
-            super().partial_update(request, *args, **kwargs)
+            return super().partial_update(request, *args, **kwargs)
         else:
-            super().partial_update(request, *args, **kwargs)
+            return super().partial_update(request, *args, **kwargs)
