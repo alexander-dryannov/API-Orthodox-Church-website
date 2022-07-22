@@ -1,20 +1,29 @@
+from .models import Album, AlbumImage
 from rest_framework import serializers
-from .models import GalleryAlbumImage, GalleryAlbum
 
 
-class GalleryAlbumImageSerializer(serializers.ModelSerializer):
+class ImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = GalleryAlbumImage
-        fields = ['id', 'image', 'width', 'height',
-                  'is_visible', 'created_at', 'updated_at']
+        model = AlbumImage
+        fields = ['id', 'album', 'src', 'width', 'height', 'origin_width', 'origin_height']
 
 
-class GalleryAlbumSerializer(serializers.ModelSerializer):
-    images = GalleryAlbumImageSerializer(source='album', many=True,
-                                         required=False, allow_null=False)
+class ImageGetByIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AlbumImage
+        fields = ['id', 'src']
+
+
+class AlbumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Album
+        fields = ['id', 'title', 'cover', 'description']
+
+
+class AlbumGetByIdSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(source='album', many=True)
 
     class Meta:
-        model = GalleryAlbum
-        fields = ['id', 'title', 'cover', 'slug',
-                  'is_visible', 'created_at', 'updated_at', 'images']
+        model = Album
+        fields = ['id', 'title', 'images']
         depth = 1

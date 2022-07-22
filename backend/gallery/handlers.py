@@ -12,19 +12,20 @@ def get_new_size(size: int) -> int:
         return 1
 
 
-def convert_image(image=None, fmt=settings.CONVERTING_SAVED_IMAGE,
-                  field_name='image'):
+def converter(image=None, fmt=settings.CONVERTING_SAVED_IMAGE):
     rgb_image = Image.open(image).convert('RGB')
-    w, h = rgb_image.size
+    origin_width, origin_height = rgb_image.size
+    width = get_new_size(origin_width)
+    height = get_new_size(origin_height)
     binary_image = BytesIO()
     rgb_image.save(binary_image, fmt)
     image_name = f'{uuid4().hex}.{fmt}'
     binary_image.seek(0)
     return InMemoryUploadedFile(
         file=binary_image,
-        field_name=field_name,
+        field_name='ImageField',
         name=image_name,
         content_type=f'image/{fmt}',
         size=rgb_image.size,
         charset=None
-    ), get_new_size(w), get_new_size(h), w, h
+    ), width, height, origin_width, origin_height

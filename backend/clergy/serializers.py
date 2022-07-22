@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from .models import Cleric
+from rest_framework import serializers
 
 
 class ClericSerializer(serializers.ModelSerializer):

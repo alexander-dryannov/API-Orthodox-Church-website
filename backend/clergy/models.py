@@ -1,6 +1,7 @@
 from uuid import uuid4
 from pathlib import Path
 from django.db import models
+from .handlers import converter
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 
@@ -17,6 +18,9 @@ class Cleric(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = uuid4().hex
+        if self.photo:
+            photo, *_ = converter(self.photo)
+            self.photo = photo
         return super().save(*args, **kwargs)
 
     def __str__(self):

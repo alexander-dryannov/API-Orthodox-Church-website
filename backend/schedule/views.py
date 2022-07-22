@@ -17,8 +17,7 @@ class LCScheduleView(MixinSchedule, generics.ListCreateAPIView):
         try:
             if request.data.get('title'):
                 document = request.data.pop('file')
-                data = get_data(document[0])
-                request.data['data'] = data
+                request.data['data'] = get_data(document[0])
                 return super().create(request, *args, **kwargs)
             else:
                 return JsonResponse(
@@ -41,8 +40,7 @@ class RUDScheduleView(MixinSchedule, generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         if request.data.get('file'):
             document = request.data.pop('file')
-            data = get_data(document[0])
-            request.data['data'] = data
+            request.data['data'] = get_data(document[0])
             return super().partial_update(request, *args, **kwargs)
         else:
             return super().partial_update(request, *args, **kwargs)

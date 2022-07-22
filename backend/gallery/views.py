@@ -1,69 +1,36 @@
-from .handlers import convert_image
+from .models import Album, Image
 from rest_framework import generics
 from django.http import JsonResponse
-from .permissions import IsStaffOrReadOnly
-from .models import GalleryAlbum, GalleryAlbumImage
-from .serializers import GalleryAlbumSerializer, GalleryAlbumImageSerializer
+from .serializers import ImageSerializer, ImageGetByIdSerializer, AlbumSerializer, AlbumGetByIdSerializer
 
 
-class MixinGallery:
-    queryset = GalleryAlbum.objects.all()
-    serializer_class = GalleryAlbumSerializer
-    permission_classes = [IsStaffOrReadOnly]
+class LCAlbumView(generics.ListCreateAPIView):
+    queryset = Album.objects.all()
+    serializer_class = AlbumSerializer
 
 
-class LCGalleryAlbumView(MixinGallery, generics.ListCreateAPIView):
+class RUDAlbumView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Album.objects.all()
+    serializer_class = AlbumGetByIdSerializer
+
+
+class LCImagesView(generics.ListCreateAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+
     def post(self, request, *args, **kwargs):
+        dump = {'images': []}
+        album_id = int(request.data.pop('pk')[0])
         if request.data.get('images'):
-            images = request.data.pop('images')
-            cover, _, _, _, _ = convert_image(request.data['cover'])
-            request.data['cover'] = cover
-            album_obj = self.create(request, *args, **kwargs)
-            for item in images:
-                image, width, height, w, h = convert_image(item, field_name='image')
-                GalleryAlbumImage.objects.create(
-                    album=self.queryset.last(),
-                    image=image,
-                    width=width,
-                    height=height,
-                    origin_width=w,
-                    origin_height=h
-                )
-            return album_obj
-        else:
-            super().create(request, *args, **kwargs)
+            items = request.data.pop('images')
+            request.data['album'] = album_id
+            for item in items:
+                request.data['src'] = item
+                image_dict = self.create(request, *args, **kwargs)
+                dump['data'].append(image_dict.data)
+        return JsonResponse(dump)
 
 
-class RUDGalleryAlbumView(MixinGallery, generics.RetrieveUpdateDestroyAPIView):
-    def patch(self, request, *args, **kwargs):
-        if request.data.get('images'):
-            images = request.data.pop('images')
-            for item in images:
-                image, width, height, w, h = convert_image(item, field_name='image')
-                GalleryAlbumImage.objects.create(
-                    album=self.queryset.last(),
-                    image=image,
-                    width=width,
-                    height=height,
-                    origin_width=w,
-                    origin_height=h
-                )
-        return super().patch(request, *args, **kwargs)
-
-
-class RUDGalleryAlbumImage(generics.RetrieveUpdateDestroyAPIView):
-    queryset = GalleryAlbumImage.objects.all()
-    serializer_class = GalleryAlbumImageSerializer
-    permission_classes = [IsStaffOrReadOnly]
-
-    def patch(self, request, *args, **kwargs):
-        if request.data.get('image'):
-            image, width, height, w, h = convert_image(
-                request.data.get('image'),
-                field_name='image')
-            request.data['image'] = image
-            request.data['width'] = width
-            request.data['height'] = height
-            request.data['origin_width'] = w
-            request.data['origin_height'] = h
-        return super().patch(request, *args, **kwargs)
+class RUDImageView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageGetByIdSerializer

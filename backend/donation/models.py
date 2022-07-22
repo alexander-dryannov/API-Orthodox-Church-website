@@ -19,7 +19,7 @@ class Donation(models.Model):
     created_at = models.DateTimeField('Создано', auto_now_add=True)
     updated_at = models.DateTimeField('Обновлено', auto_now=True)
     is_visible = models.BooleanField('Видимость', default=True)
-    
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = uuid4().hex

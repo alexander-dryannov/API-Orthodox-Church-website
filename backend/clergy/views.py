@@ -13,12 +13,9 @@ class MixinClergy:
 
 
 class LCClericView(MixinClergy, generics.ListCreateAPIView):
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         try:
-            document = request.data.pop('file')
+            document = request.data.pop('document')
         except AttributeError:
             return JsonResponse(
                 {
@@ -44,8 +41,8 @@ class LCClericView(MixinClergy, generics.ListCreateAPIView):
 
 class RUDClericView(MixinClergy, generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
-        if request.data.get('file'):
-            document = request.data.pop('file')
+        if request.data.get('document'):
+            document = request.data.pop('document')
             data, photo = get_cleric_data(document[0])
             request.data['photo'] = photo
             request.data['data'] = data

@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import LCGalleryAlbumView, RUDGalleryAlbumView, RUDGalleryAlbumImage
+from .views import LCAlbumView, RUDAlbumView, LCImagesView, RUDImageView
+
 
 urlpatterns = [
-    path('album', LCGalleryAlbumView.as_view(), name='list-create'),
-    path('album/<int:pk>', RUDGalleryAlbumView.as_view(), name='rud-album'),
-    path('album/image/<int:pk>', RUDGalleryAlbumImage.as_view(), name='rud-image')
+    path('albums', LCAlbumView.as_view(), name='list-album'),
+    path('album/<int:pk>', RUDAlbumView.as_view(), name='retrieve'),
+    path('images', LCImagesView.as_view(), name='list-image'),
+    path('image/<int:pk>', RUDImageView.as_view(), name='retrieve-image')
 ]

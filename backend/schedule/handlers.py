@@ -1,4 +1,3 @@
-import sys
 import json
 from docx import Document
 
@@ -33,8 +32,3 @@ def get_data(docx_file):
         data_raw[item]['tables'].update(parsing_data)
         data.update(data_raw)
     return json.dumps(data, indent=2, ensure_ascii=False)
-
-
-if __name__ == '__main__':
-    file = sys.argv[-1]
-    get_data(file)
